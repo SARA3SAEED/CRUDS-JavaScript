@@ -8,6 +8,9 @@ let count = document.getElementById('count');
 let category = document.getElementById('category');
 let submit = document.getElementById('submit');
 
+// these steps for updating the product
+let mood = 'create';
+let tmp ;
 
 console.log(title , category , total , count , submit ,price , discount,taxes,ads ); 
 
@@ -57,6 +60,9 @@ submit.onclick= function createProduct(){
 
     console.log(product);
 
+    // here step 8 of update
+    if(mood == 'create'){
+
     // here step 7 of count
     if(product.count > 1) {
         for (let i = 0; i < product.count; i++) {
@@ -65,6 +71,12 @@ submit.onclick= function createProduct(){
     }else{
         data.push(product);
     }
+ }else {
+     data[tmp] = product;
+     mood = 'create';
+     submit.innerHTML = 'Create';
+     count.style.display = 'block';
+ }
 
 
     localStorage.setItem('product', JSON.stringify(data));
@@ -94,6 +106,10 @@ function clearInput(){
 
 function showProduct(){
 
+    // for update function we call getTotal function here to back the total value original value
+    getTotal();
+
+    
     let table ='';
     let tbody = document.getElementById('tbody');
     for (let i = 0; i < data.length; i++) {
@@ -167,12 +183,20 @@ function deleteAll(){
 //8-Edit product
 
 function editProduct(index){
+    console.log(index);
     title.value = data[index].title;
     price.value = data[index].price;
     taxes.value = data[index].taxes;
     ads.value = data[index].ads;
     discount.value = data[index].discount;
-    total.innerHTML = data[index].total;
-    count.value = data[index].count;
+    getTotal();
+    count.style.display = 'none';
     category.value = data[index].category;
+    submit.innerHTML = 'Update';
+    mood = 'update';
+    tmp = index;
+    scroll({
+        top : 0,
+        behavior :'smooth'
+    })
 }
